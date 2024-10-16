@@ -1,3 +1,4 @@
+import os
 import torch
 from transformers import CLIPProcessor, CLIPModel
 from PIL import Image
@@ -7,7 +8,13 @@ model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
 processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
 # Load an image where makeup is applied
-image = Image.open("/Users/yingjianding/Documents/imagesForFashionScope/CHANELROUGE16022023.jpg")
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Build the full path to the image
+image_path = os.path.join(script_dir, 'test_image.jpg')
+
+# Load the image
+image = Image.open(image_path)
 
 # Define makeup categories or descriptions to recognize
 makeup_descriptions = [
@@ -22,6 +29,8 @@ makeup_descriptions = [
     "Chanel Rouge Allure Velvet Luminous Matte Lip Color", "Chanel Rouge Coco Flash", "Chanel Rouge Allure Ink", 
     "gucci rouge agrave l egrave vres voile sheer lipstick P452737", "gucci rouge a l eacute gant satin lipstick P452737"
 ]
+
+# makeup_descriptions = ["human", "human face", "dog"]
 
 # Preprocess image and text for CLIP
 inputs = processor(text=makeup_descriptions, images=image, return_tensors="pt", padding=True)
